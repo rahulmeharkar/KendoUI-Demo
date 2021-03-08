@@ -1,0 +1,263 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+@*<div id="example">
+        <div id="grid"></div>
+
+        <script>
+            $(document).ready(function () {
+                var crudServiceBaseUrl = "http://localhost:50378/api",
+                    dataSource = new kendo.data.DataSource({
+                        transport: {
+                            read:  {
+                                url: crudServiceBaseUrl + "/listmember",
+                                dataType: "json"
+                            },
+                            update: {
+                                url: crudServiceBaseUrl + "/updaterecord",
+                                dataType: "json",
+                                type:"PUT",
+                                complete: function (e) {
+                                    $("#grid").data("kendoGrid").dataSource.read();
+                                }
+                            },
+                            destroy: {
+                                url: crudServiceBaseUrl + "/deletemember",
+                                dataType: "json",
+                                type:"DELETE",
+                                complete: function (e) {
+                                    $("#grid").data("kendoGrid").dataSource.read();
+                                }
+                            },
+                            create: {
+                                url: crudServiceBaseUrl + "/addmember",
+                                dataType: "json",
+                                type:"POST",
+                                complete: function (e) {
+                                    $("#grid").data("kendoGrid").dataSource.read();
+                                }
+                            },
+                            parameterMap: function(options, operation) {
+                                if (operation !== "read" && options.models) {
+                                    return { models: JSON.stringify(options.models) };
+                                }
+                            }
+                        },
+                        batch: true,
+                        pageSize: 20,
+                        schema: {
+                            model: {
+                                id: "e_id",
+                                fields: {
+                                    e_id: { editable: false, nullable: true },
+                                    e_name: { validation: { required: true } },
+                                    e_village: { validation: { required: true } },
+                                    e_dist: { validation: { required: true } },
+                                    e_postcode: { validation: { required: true } }
+                                }
+                            }
+                        }
+                    });
+
+                $("#grid").kendoGrid({
+                    dataSource: dataSource,
+                    pageable: true,
+                    height: 550,
+                    toolbar: ["create"],
+                    columns: [
+                        { field: "e_name", title: "Name" },
+                        { field: "e_village", title: "Village", width: "120px" },
+                        { field: "e_dist", title: "Distric", width: "120px" },
+                        { field: "e_postcode", title: "Post_Code", width: "120px" },
+                        { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }],
+                    editable: "popup"
+                });
+            });
+        </script>
+    </div>*@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="https://demos.telerik.com/kendo-ui/grid/editing-popup">
+    <style>
+        html {
+            font-size: 14px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+    <title></title>
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.1.119/styles/kendo.bootstrap-v4.min.css" />
+
+    <script src="https://kendo.cdn.telerik.com/2021.1.119/js/jquery.min.js"></script>
+
+
+    <script src="https://kendo.cdn.telerik.com/2021.1.119/js/kendo.all.min.js"></script>
+    <style>
+    .center {
+  right: 0px;
+  width: 300px;
+  padding: 10px;
+    }
+    </style>
+</head>
+<body>
+    <div class="center">
+    <input id="autocomplete" />
+        <span id="notification"></span>
+    </div>
+    <script>
+var dataSource = new kendo.data.DataSource({
+  transport: {
+    read: {
+        url: "http://localhost:50378/api/listmember",
+      dataType: "json"
+    }
+  }
+});
+$("#autocomplete").kendoAutoComplete({
+    suggest:true,
+    placeholder: "Search hear ...",
+  dataSource: dataSource,
+  dataTextField: "e_name",
+  //dataTextField: "e_village",
+  //dataTextField: "e_dist",
+  //dataTextField: "e_postcode",
+  noDataTemplate: 'No Data Found!'
+});
+    </script>
+    <br>
+    <div id="example">
+        <div id="grid"></div>
+
+        <script>
+            $(document).ready(function () {
+                var crudServiceBaseUrl = "http://localhost:50378/api",
+                    dataSource = new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: crudServiceBaseUrl + "/listmember",
+                                dataType: "json"
+                            },
+                            update: {
+                                url: crudServiceBaseUrl + "/updaterecord",
+                                dataType: "json",
+                                type: "PUT",
+                                complete: function (e) {
+                                    $("#grid").data("kendoGrid").dataSource.read();
+                                    $("#notification").kendoNotification({
+                                        position: {
+                                            top: 30
+                                        },
+                                        autoHideAfter: 3000
+                                    });
+                                    $("#notification").getKendoNotification().show("Succesfully Updated");
+                                }
+                            },
+                            destroy: {
+                                url: crudServiceBaseUrl + "/deletemember",
+                                dataType: "json",
+                                type: "DELETE",
+                                complete: function (e) {
+                                    $("#grid").data("kendoGrid").dataSource.read();
+                                    $("#notification").kendoNotification({
+                                        position: {
+                                            top: 30
+                                        },
+                                        autoHideAfter: 3000
+                                    });
+                                    $("#notification").getKendoNotification().show("Succesfully Deleted");
+                                }
+                            },
+                            create: {
+                                url: crudServiceBaseUrl + "/addmember",
+                                dataType: "json",
+                                type: "POST",
+                                complete: function (e) {
+                                    if (e.status == 200) {
+                                        $("#grid").data("kendoGrid").dataSource.read();
+                                        $("#notification").kendoNotification({
+                                            position: {
+                                                top: 30
+                                            },
+                                            autoHideAfter: 3000
+                                        });
+                                        $("#notification").getKendoNotification().show("Succesfully Created/Inserted Record");
+                                    }
+                                    else
+                                    {
+                                        //$("#grid").data("kendoGrid").dataSource.read();
+                                        $("#notification").kendoNotification({
+                                            position: {
+                                                top: 30
+                                            },
+                                            autoHideAfter: 3000
+                                        });
+                                        $("#notification").getKendoNotification().show("Failed ....Check your connection");
+                                    }
+                                }
+                            },
+                            parameterMap: function (options, operation) {   
+                                if (operation !== "read" && options.models) {
+                                    return { models: JSON.stringify(options.models) };
+                                }
+                             
+                            }
+                        },
+                        
+                        batch: true,
+                        pageSize: 20,
+                        schema: {
+                            model: {
+                                id: "e_id",
+                                fields: {
+                                    e_id: { editable: false, nullable: true },
+                                    e_name: { validation: { required: true,
+                                        namevalidation: function (input) {
+                                            if (input.is("[name='e_name']") && input.val() != "") {
+                                                input.attr("data-namevalidation-msg", "Name should be start with capital letter");
+                                                return /^[A-Z]/.test(input.val());
+                                            }
+
+                                            return true;
+                                        }
+                                    }  },
+                                    e_village: { validation: { required: true } },
+                                    e_dist: { validation: { required: true } },
+                                    e_postcode: {
+                                        validation: {
+                                            required: true, postcodevalidation: function (input) {
+                                                if (input.is("[name='e_postcode']") && input.val() != "") {
+                                                    input.attr("data-postcodevalidation-msg", "Only 6 Digit Numbers Allowed");
+                                                    return /^[0-9]/.test(input.val());
+                                                }
+
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                $("#grid").kendoGrid({
+                    dataSource: dataSource,
+                    pageable: true,
+                    height: 550,
+                    toolbar: ["create","search"],
+                    columns: [
+                        { field: "e_name", title: "Name" },
+                        { field: "e_village", title: "Village", width: "120px" },
+                        { field: "e_dist", title: "Distric", width: "120px" },
+                        { field: "e_postcode", title: "Post_Code", width: "120px" },
+                        { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }],
+                    editable: "popup"
+                });
+            });
+        </script>
+    </div>
+
+</body>
+</html>
